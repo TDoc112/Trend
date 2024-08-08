@@ -5,19 +5,29 @@ document.getElementById('urlForm').addEventListener('submit', async (e) => {
     summaryArea.innerHTML = 'Fetching and summarizing...';
 
     try {
-        // Replace 'YOUR_API_ENDPOINT' with the actual endpoint of your API
-        const response = await fetch('YOUR_API_ENDPOINT', {
+        // First, fetch the article content
+        const articleResponse = await fetch(url);
+        const articleText = await articleResponse.text();
+
+        // Then, use Hugging Face API for summarization
+        const response = await fetch('https://api-inference.huggingface.co/models/t5-base', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                // If your API requires an API key, include it here
-                // 'Authorization': 'Bearer YOUR_API_KEY'
+                'Authorization': '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'
             },
-            body: JSON.stringify({ url }),
+            body: JSON.stringify({
+                inputs: articleText,
+                parameters: {
+                    max_length: 100,
+                    min_length: 30
+                }
+            }),
         });
+
         const data = await response.json();
         if (response.ok) {
-            summaryArea.innerHTML = `<h2>Summary:</h2><p>${data.summary}</p>`;
+            summaryArea.innerHTML = `<h2>Summary:</h2><p>${data[0].summary_text}</p>`;
         } else {
             summaryArea.innerHTML = `<p>Error: ${data.error || 'Failed to summarize article'}</p>`;
         }
