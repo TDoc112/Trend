@@ -3,208 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Top Trends Dashboard</title>
+    <title>Article Summarizer</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            margin: 0;
-            padding: 20px;
-            background-color: #f4f4f4;
-        }
-        .container {
-            max-width: 1200px;
-            margin: auto;
-            overflow: hidden;
-            padding: 0 20px;
-        }
-        #getTrendsBtn {
-            display: block;
-            width: 200px;
-            height: 50px;
-            margin: 20px auto;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 18px;
-            cursor: pointer;
-        }
-        #getTrendsBtn:hover {
-            background-color: #45a049;
-        }
-        .trend-section {
-            background-color: white;
+        /* ... (keep existing styles) ... */
+        #urlForm {
             margin-bottom: 20px;
+        }
+        #summaryArea {
+            background-color: white;
             padding: 20px;
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        h2 {
-            color: #333;
-        }
-        .trend-item {
-            margin-bottom: 15px;
-        }
-        .trend-item h3 {
-            margin-bottom: 5px;
-            color: #1a73e8;
-            cursor: pointer;
-        }
-        .trend-item h3:hover {
-            text-decoration: underline;
-        }
-        .trend-item p {
-            margin-bottom: 5px;
-        }
-        .citation {
-            font-size: 0.9em;
-            color: #666;
-        }
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0,0,0,0.4);
-        }
-        .modal-content {
-            background-color: #fefefe;
-            margin: 15% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
-            max-width: 600px;
-        }
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        .close:hover,
-        .close:focus {
-            color: #000;
-            text-decoration: none;
-            cursor: pointer;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Top Trends Dashboard</h1>
-        <button id="getTrendsBtn">Get Top Trends</button>
-        <div id="trendsContent"></div>
-    </div>
-
-    <div id="trendModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2 id="modalTitle"></h2>
-            <p id="modalContent"></p>
-            <p id="modalCitation"></p>
-        </div>
+        <h1>Article Summarizer</h1>
+        <form id="urlForm">
+            <input type="text" id="urlInput" placeholder="Enter article URL" required>
+            <button type="submit">Summarize</button>
+        </form>
+        <div id="summaryArea"></div>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const getTrendsBtn = document.getElementById('getTrendsBtn');
-            const trendsContent = document.getElementById('trendsContent');
-            const modal = document.getElementById('trendModal');
-            const modalTitle = document.getElementById('modalTitle');
-            const modalContent = document.getElementById('modalContent');
-            const modalCitation = document.getElementById('modalCitation');
-            const closeBtn = document.getElementsByClassName('close')[0];
+        document.getElementById('urlForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const url = document.getElementById('urlInput').value;
+            const summaryArea = document.getElementById('summaryArea');
+            summaryArea.innerHTML = 'Fetching and summarizing...';
 
-            getTrendsBtn.addEventListener('click', fetchTrends);
-            closeBtn.addEventListener('click', () => modal.style.display = 'none');
-            window.addEventListener('click', (event) => {
-                if (event.target == modal) {
-                    modal.style.display = 'none';
+            try {
+                const response = await fetch('/fetch_and_summarize', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ url }),
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    summaryArea.innerHTML = `<h2>Summary:</h2><p>${data.summary}</p>`;
+                } else {
+                    summaryArea.innerHTML = `<p>Error: ${data.error}</p>`;
                 }
-            });
-
-            async function fetchTrends() {
-                const trendsData = await mockFetchTrends();
-                displayTrends(trendsData);
-            }
-
-            function displayTrends(data) {
-                trendsContent.innerHTML = '';
-                data.forEach(category => {
-                    const section = document.createElement('div');
-                    section.className = 'trend-section';
-                    section.innerHTML = `
-                        <h2>${category.name}</h2>
-                        ${category.trends.map(trend => `
-                            <div class="trend-item">
-                                <h3 onclick="openModal('${trend.title}', '${trend.fullContent}', '${trend.source}', ${trend.year})">${trend.title}</h3>
-                                <p>${trend.summary}</p>
-                                <span class="citation">Source: ${trend.source}, ${trend.year}</span>
-                            </div>
-                        `).join('')}
-                    `;
-                    trendsContent.appendChild(section);
-                });
-            }
-
-            window.openModal = function(title, content, source, year) {
-                modalTitle.textContent = title;
-                modalContent.textContent = content;
-                modalCitation.textContent = `Source: ${source}, ${year}`;
-                modal.style.display = 'block';
-            }
-
-            async function mockFetchTrends() {
-                return new Promise(resolve => {
-                    setTimeout(() => {
-                        resolve([
-                            {
-                                name: "Business Trends",
-                                trends: [
-                                    {
-                                        title: "Remote Work Revolution",
-                                        summary: "Companies are increasingly adopting permanent remote work policies, reshaping office culture and real estate markets.",
-                                        fullContent: "The COVID-19 pandemic has accelerated the adoption of remote work policies across industries. Many companies, including tech giants like Twitter and Facebook, have announced permanent work-from-home options. This shift is not only changing how businesses operate but also impacting real estate markets as employees seek homes with dedicated office spaces rather than proximity to city centers. The long-term effects of this trend are yet to be fully understood, but it's clear that the traditional office environment is undergoing a significant transformation.",
-                                        source: "Forbes",
-                                        year: 2024
-                                    },
-                                    {
-                                        title: "Sustainable Business Practices",
-                                        summary: "Businesses are prioritizing sustainability in their operations and products to meet consumer demands and regulatory requirements.",
-                                        fullContent: "Sustainability has moved from a niche concern to a central business strategy. Companies across sectors are implementing eco-friendly practices, from reducing carbon emissions to using recycled materials in products. This shift is driven by increasing consumer awareness, stricter regulations, and the realization that sustainable practices can lead to cost savings and improved brand reputation. Many businesses are now setting ambitious goals to become carbon neutral or even carbon negative in the coming years.",
-                                        source: "Harvard Business Review",
-                                        year: 2024
-                                    }
-                                ]
-                            },
-                            {
-                                name: "Science Trends",
-                                trends: [
-                                    {
-                                        title: "Quantum Computing Breakthrough",
-                                        summary: "Scientists achieve major milestone in quantum error correction, bringing practical quantum computers closer to reality.",
-                                        fullContent: "Researchers at a leading tech company have announced a significant breakthrough in quantum error correction, one of the biggest challenges in quantum computing. This advancement could pave the way for more stable and reliable quantum computers, potentially revolutionizing fields such as cryptography, drug discovery, and complex system modeling. While practical, large-scale quantum computers are still years away, this development marks a crucial step towards their realization.",
-                                        source: "Nature",
-                                        year: 2024
-                                    },
-                                    {
-                                        title: "CRISPR Gene Editing Advances",
-                                        summary: "New CRISPR techniques allow for more precise and efficient gene editing, opening up new possibilities in medicine and agriculture.",
-                                        fullContent: "Scientists have developed new CRISPR gene editing techniques that offer unprecedented precision and efficiency. These advancements could accelerate progress in treating genetic disorders, developing drought-resistant crops, and even tackling climate change through engineered carbon-capturing plants. However, ethical concerns remain, particularly regarding human germline editing. Regulatory bodies worldwide are working to establish guidelines for the responsible use of these powerful new tools.",
-                                        source: "Science",
-                                        year: 2024
-                                    }
-                                ]
-                            }
-                        ]);
-                    }, 1000);
-                });
+            } catch (error) {
+                summaryArea.innerHTML = `<p>Error: ${error.message}</p>`;
             }
         });
     </script>
