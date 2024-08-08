@@ -65,6 +65,81 @@
         <div id="trendsContent"></div>
     </div>
 
-    <script src="trends.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const getTrendsBtn = document.getElementById('getTrendsBtn');
+            const trendsContent = document.getElementById('trendsContent');
+
+            getTrendsBtn.addEventListener('click', fetchTrends);
+
+            async function fetchTrends() {
+                const trendsData = await mockFetchTrends();
+                displayTrends(trendsData);
+            }
+
+            function displayTrends(data) {
+                trendsContent.innerHTML = '';
+                data.forEach(category => {
+                    const section = document.createElement('div');
+                    section.className = 'trend-section';
+                    section.innerHTML = `
+                        <h2>${category.name}</h2>
+                        ${category.trends.map(trend => `
+                            <div class="trend-item">
+                                <h3>${trend.title}</h3>
+                                <p>${trend.summary}</p>
+                                <span class="citation">Source: ${trend.source}, ${trend.year}</span>
+                            </div>
+                        `).join('')}
+                    `;
+                    trendsContent.appendChild(section);
+                });
+            }
+
+            async function mockFetchTrends() {
+                return new Promise(resolve => {
+                    setTimeout(() => {
+                        resolve([
+                            {
+                                name: "Business Trends",
+                                trends: [
+                                    {
+                                        title: "Remote Work Revolution",
+                                        summary: "Companies are increasingly adopting permanent remote work policies, reshaping office culture and real estate markets.",
+                                        source: "Forbes",
+                                        year: 2024
+                                    },
+                                    {
+                                        title: "Sustainable Business Practices",
+                                        summary: "Businesses are prioritizing sustainability in their operations and products to meet consumer demands and regulatory requirements.",
+                                        source: "Harvard Business Review",
+                                        year: 2024
+                                    }
+                                ]
+                            },
+                            {
+                                name: "Science Trends",
+                                trends: [
+                                    {
+                                        title: "Quantum Computing Breakthrough",
+                                        summary: "Scientists achieve major milestone in quantum error correction, bringing practical quantum computers closer to reality.",
+                                        source: "Nature",
+                                        year: 2024
+                                    },
+                                    {
+                                        title: "CRISPR Gene Editing Advances",
+                                        summary: "New CRISPR techniques allow for more precise and efficient gene editing, opening up new possibilities in medicine and agriculture.",
+                                        source: "Science",
+                                        year: 2024
+                                    }
+                                ]
+                            },
+                            // Add more categories here if desired
+                        ]);
+                    }, 1000);
+                });
+            }
+        });
+    </script>
 </body>
 </html>
