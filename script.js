@@ -25,7 +25,7 @@ document.getElementById('fetchButton').addEventListener('click', async () => {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': 'Bearer YOUR_ACCESS_TOKEN'
+                        'Authorization': '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'
                     },
                     body: JSON.stringify({
                         inputs: articleText,
