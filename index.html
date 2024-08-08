@@ -4,18 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Article Summarizer</title>
-    <style>
-        /* ... (keep existing styles) ... */
-        #urlForm {
-            margin-bottom: 20px;
-        }
-        #summaryArea {
-            background-color: white;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
@@ -26,32 +15,6 @@
         </form>
         <div id="summaryArea"></div>
     </div>
-
-    <script>
-        document.getElementById('urlForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const url = document.getElementById('urlInput').value;
-            const summaryArea = document.getElementById('summaryArea');
-            summaryArea.innerHTML = 'Fetching and summarizing...';
-
-            try {
-                const response = await fetch('/fetch_and_summarize', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ url }),
-                });
-                const data = await response.json();
-                if (response.ok) {
-                    summaryArea.innerHTML = `<h2>Summary:</h2><p>${data.summary}</p>`;
-                } else {
-                    summaryArea.innerHTML = `<p>Error: ${data.error}</p>`;
-                }
-            } catch (error) {
-                summaryArea.innerHTML = `<p>Error: ${error.message}</p>`;
-            }
-        });
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
