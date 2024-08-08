@@ -1,6 +1,8 @@
 document.getElementById('fetchButton').addEventListener('click', async () => {
     const summaryArea = document.getElementById('summaryArea');
-    summaryArea.innerHTML = 'Fetching and summarizing...';
+    const errorArea = document.getElementById('errorArea');
+    summaryArea.innerHTML = '';
+    errorArea.innerHTML = '';
 
     try {
         // Replace this with your own list of popular sites
@@ -23,7 +25,7 @@ document.getElementById('fetchButton').addEventListener('click', async () => {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        'Authorization': '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'
+                        'Authorization': 'Bearer YOUR_ACCESS_TOKEN'
                     },
                     body: JSON.stringify({
                         inputs: articleText,
@@ -38,15 +40,21 @@ document.getElementById('fetchButton').addEventListener('click', async () => {
                 if (response.ok) {
                     return `<h2>${site}</h2><p>${data[0].summary_text}</p>`;
                 } else {
-                    return `<p>Error: ${data.error || 'Failed to summarize article'}</p>`;
+                    throw new Error(`Failed to summarize article from ${site}: ${data.error}`);
                 }
             } catch (error) {
-                return `<p>Error: ${error.message}</p>`;
+                throw new Error(`Failed to fetch or summarize article from ${site}: ${error.message}`);
             }
         }));
 
-        summaryArea.innerHTML = summaries.join('');
+        summaries.forEach(summary => {
+            const summaryElement = document.createElement('div');
+            summaryElement.innerHTML = summary;
+            summaryArea.appendChild(summaryElement);
+        });
     } catch (error) {
-        summaryArea.innerHTML = `<p>Error: ${error.message}</p>`;
+        const errorElement = document.createElement('div');
+        errorElement.innerHTML = `<p>Error: ${error.message}</p>`;
+        errorArea.appendChild(errorElement);
     }
 });
