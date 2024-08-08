@@ -62,77 +62,9 @@
     <div class="container">
         <h1>Top Trends Dashboard</h1>
         <button id="getTrendsBtn">Get Top Trends</button>
-        <div id="trendsContent" style="display: none;">
-            <!-- Trends content will be inserted here -->
-        </div>
+        <div id="trendsContent"></div>
     </div>
 
-    <script>
-        document.getElementById('getTrendsBtn').addEventListener('click', function() {
-            const trendsContent = document.getElementById('trendsContent');
-            trendsContent.style.display = 'block';
-            trendsContent.innerHTML = `
-                <div class="trend-section">
-                    <h2>Business Trends</h2>
-                    <div class="trend-item">
-                        <h3>Remote Work Revolution</h3>
-                        <p>Companies are increasingly adopting permanent remote work policies, reshaping office culture and real estate markets.</p>
-                        <span class="citation">Source: Forbes, 2024</span>
-                    </div>
-                    <!-- Add more business trends here -->
-                </div>
-
-                <div class="trend-section">
-                    <h2>Science Trends</h2>
-                    <div class="trend-item">
-                        <h3>Quantum Computing Breakthrough</h3>
-                        <p>Scientists achieve major milestone in quantum error correction, bringing practical quantum computers closer to reality.</p>
-                        <span class="citation">Source: Nature, 2024</span>
-                    </div>
-                    <!-- Add more science trends here -->
-                </div>
-
-                <div class="trend-section">
-                    <h2>Product Management Trends</h2>
-                    <div class="trend-item">
-                        <h3>AI-Driven Product Development</h3>
-                        <p>Product managers increasingly leverage AI tools for market analysis, feature prioritization, and user behavior prediction.</p>
-                        <span class="citation">Source: ProductPlan, 2024</span>
-                    </div>
-                    <!-- Add more product management trends here -->
-                </div>
-
-                <div class="trend-section">
-                    <h2>UX Trends</h2>
-                    <div class="trend-item">
-                        <h3>Voice User Interfaces (VUI)</h3>
-                        <p>VUI design becomes a critical skill as voice-activated devices and applications continue to proliferate.</p>
-                        <span class="citation">Source: UX Booth, 2024</span>
-                    </div>
-                    <!-- Add more UX trends here -->
-                </div>
-
-                <div class="trend-section">
-                    <h2>News Trends (Major Outlets)</h2>
-                    <div class="trend-item">
-                        <h3>Global Climate Summit</h3>
-                        <p>World leaders gather for unprecedented climate action agreement, setting ambitious targets for carbon neutrality.</p>
-                        <span class="citation">Source: The New York Times, 2024</span>
-                    </div>
-                    <!-- Add more major news trends here -->
-                </div>
-
-                <div class="trend-section">
-                    <h2>News Trends (Minor Outlets)</h2>
-                    <div class="trend-item">
-                        <h3>Local Food Movement Gains Traction</h3>
-                        <p>Small-scale farmers and community-supported agriculture see surge in popularity across rural America.</p>
-                        <span class="citation">Source: Modern Farmer, 2024</span>
-                    </div>
-                    <!-- Add more minor news trends here -->
-                </div>
-            `;
-        });
-    </script>
+    <script src="trends.js"></script>
 </body>
 </html>
