@@ -5,11 +5,13 @@ document.getElementById('urlForm').addEventListener('submit', async (e) => {
     summaryArea.innerHTML = 'Fetching and summarizing...';
 
     try {
-        // Note: This is a placeholder. You'll need to replace this with an actual API call.
-        const response = await fetch('https://api.example.com/summarize', {
+        // Replace 'YOUR_API_ENDPOINT' with the actual endpoint of your API
+        const response = await fetch('YOUR_API_ENDPOINT', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                // If your API requires an API key, include it here
+                // 'Authorization': 'Bearer YOUR_API_KEY'
             },
             body: JSON.stringify({ url }),
         });
@@ -17,7 +19,7 @@ document.getElementById('urlForm').addEventListener('submit', async (e) => {
         if (response.ok) {
             summaryArea.innerHTML = `<h2>Summary:</h2><p>${data.summary}</p>`;
         } else {
-            summaryArea.innerHTML = `<p>Error: ${data.error}</p>`;
+            summaryArea.innerHTML = `<p>Error: ${data.error || 'Failed to summarize article'}</p>`;
         }
     } catch (error) {
         summaryArea.innerHTML = `<p>Error: ${error.message}</p>`;
